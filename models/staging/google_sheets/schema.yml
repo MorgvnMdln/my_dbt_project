@@ -3,3 +3,14 @@ version: 2
 models:
   - name: stg_google_sheets__account_manager_region_mapping
     description: "This model provides a mapping of account managers to states from a Google Sheets source."
+    columns:
+      - name: state
+        description: "Code of the state ou region"
+        tests:
+          - not_null
+          - unique
+      
+      - name: account_manager
+        description: "Name of the account manager responsible for the region"
+        tests:
+          - not_null
