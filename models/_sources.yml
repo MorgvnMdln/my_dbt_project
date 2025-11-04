@@ -21,3 +21,36 @@ sources:
       - name: order_item
       - name: seller
       - name: user
+
+  - name: local_bike_raw
+    description: "Raw data from Local Bike sales system"
+    database: bootcamp-databird-051025-b1
+    schema: local_bike_raw
+    
+    tables:
+      - name: customers
+        description: "Customer information"
+      
+      - name: orders
+        description: "Order transactions"
+      
+      - name: order_items
+        description: "Items within each order"
+      
+      - name: products
+        description: "Product catalog"
+      
+      - name: categories
+        description: "Product categories"
+      
+      - name: brands
+        description: "Bike brands"
+      
+      - name: stores
+        description: "Store locations (Santa Cruz, Baldwin, Rowlett)"
+      
+      - name: staffs
+        description: "Store staff information"
+      
+      - name: stocks
+        description: "Product inventory by store"
