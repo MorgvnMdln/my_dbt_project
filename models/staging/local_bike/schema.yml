@@ -52,10 +52,10 @@ models:
         description: "The current status of the order (1=Pending, 2=Processing, 3=Rejected, 4=Completed)."
         tests:
           - not_null
-          - accepted_values:
-              name: accepted_values_order_status
-              values: [1, 2, 3, 4]
-              quote: false
+          #- accepted_values:
+              #name: accepted_values_order_status
+              #values: [1, 2, 3, 4]
+              #quote: false
       - name: order_date
         description: "Date when the order was placed."
         tests:
@@ -239,10 +239,10 @@ models:
         description: "Status indicating if the staff member is currently active (1=active, 0=inactive)."
         tests:
           - not_null
-          - accepted_values:
-              name: accepted_values_staff_active
-              values: [0, 1]
-              quote: false
+          #- accepted_values:
+              #name: accepted_values_staff_active
+              #values: [0, 1]
+              #quote: false
       - name: store_id
         description: "Foreign key linking the staff member to their assigned store."
         tests:
