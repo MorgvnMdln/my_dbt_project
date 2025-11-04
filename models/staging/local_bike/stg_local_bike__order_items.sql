@@ -9,9 +9,9 @@ SELECT
   CONCAT(CAST(order_id AS STRING), '-', CAST(item_id AS STRING)) AS order_item_id,
   
   -- Foreign keys
-  order_id,
-  item_id,
-  product_id,
+  CAST(order_id AS STRING) AS cusorder_idtomer_id,
+  CAST(item_id AS STRING) AS item_id,
+  CAST(product_id AS STRING) AS product_id,
   
   -- Données métier
   quantity,

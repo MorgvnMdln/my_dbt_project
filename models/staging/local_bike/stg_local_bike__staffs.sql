@@ -7,7 +7,7 @@ SELECT
   CONCAT(TRIM(first_name), ' ', TRIM(last_name)) AS full_name,
   LOWER(TRIM(email)) AS email,
   TRIM(phone) AS phone,
-  CAST(active AS BOOLEAN) AS is_active,
+  CAST(active AS BOOLEAN) AS active,
   CAST(store_id AS STRING) AS store_id,
   CAST(manager_id AS STRING) AS manager_id
 FROM {{ source('local_bike_raw', 'staffs') }}

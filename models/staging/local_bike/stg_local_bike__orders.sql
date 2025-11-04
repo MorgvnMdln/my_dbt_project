@@ -7,13 +7,13 @@ WITH source_data AS (
 
 cleaned AS (
   SELECT
-    -- Primary key (INT64)
-    order_id,
+    -- Primary key 
+    CAST(order_id AS STRING) AS order_id,
     
     -- Foreign keys (INT64 pour les jointures)
-    customer_id,
-    store_id,
-    CAST(staff_id AS INT64) AS staff_id,  
+    CAST(customer_id AS STRING) AS customer_id,
+    CAST(store_id AS STRING) AS store_id,
+    CAST(staff_id AS STRING) AS staff_id,  
     
     -- Status 
     CAST(order_status AS INT64) AS order_status,

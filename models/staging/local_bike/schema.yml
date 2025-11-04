@@ -55,6 +55,7 @@ models:
           - accepted_values:
               name: accepted_values_order_status
               values: [1, 2, 3, 4]
+              quote: false
       - name: order_date
         description: "Date when the order was placed."
         tests:
@@ -241,6 +242,7 @@ models:
           - accepted_values:
               name: accepted_values_staff_active
               values: [0, 1]
+              quote: false
       - name: store_id
         description: "Foreign key linking the staff member to their assigned store."
         tests:

@@ -7,7 +7,7 @@ WITH source_data AS (
 
 SELECT
   -- Primary key
-  store_id,
+  CAST(store_id AS STRING) AS store_id,
   
   -- Store info
   TRIM(store_name) AS store_name,

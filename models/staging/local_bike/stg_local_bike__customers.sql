@@ -7,8 +7,8 @@ WITH source_data AS (
 
 cleaned AS (
   SELECT
-    -- Primary key (format INT64 dans schema.yml)
-    customer_id,
+    -- Primary key (format STRING)
+    CAST(customer_id AS STRING) AS customer_id,
     
     -- Personal info
     TRIM(first_name) AS first_name,
