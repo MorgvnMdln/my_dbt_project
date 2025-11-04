@@ -1,13 +1,24 @@
--- models/staging/stg_local_bike__stores.sql
+-- models/staging/local_bike/stg_local_bike__stores.sql
+
+WITH source_data AS (
+  SELECT *
+  FROM {{ source('local_bike_raw', 'stores') }}
+)
 
 SELECT
-  CAST(store_id AS STRING) AS store_id,
+  -- Primary key
+  store_id,
+  
+  -- Store info
   TRIM(store_name) AS store_name,
   TRIM(phone) AS phone,
   LOWER(TRIM(email)) AS email,
+  
+  -- Address
   TRIM(street) AS street,
   TRIM(city) AS city,
-  UPPER(TRIM(state)) AS state,
-  TRIM(zip_code) AS zip_code
-FROM {{ source('local_bike_raw', 'stores') }}
+  TRIM(state) AS state,
+  CAST(zip_code AS STRING) AS zip_code
+
+FROM source_data
 WHERE store_id IS NOT NULL

@@ -210,7 +210,7 @@ models:
       - name: state
         description: "State where the store is located."
       - name: zip_code
-        description: "ZIP code of the store's address."
+        description: "ZIP code of the store's address (stored as STRING to preserve leading zeros)."
 
   - name: stg_local_bike__staffs
     description: "This model contains store employee information including personal details, active status, store assignment, and managerial hierarchy"

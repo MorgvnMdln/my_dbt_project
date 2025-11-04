@@ -20,9 +20,14 @@ cleaned AS (
     
     -- Dates 
     CAST(order_date AS TIMESTAMP) AS order_date,
-    CAST(required_date AS TIMESTAMP) AS required_date,
-    CAST(shipped_date AS TIMESTAMP) AS shipped_date,  
-    
+    CAST(required_date AS TIMESTAMP) AS required_date, 
+    CASE 
+      WHEN shipped_date IS NULL THEN NULL
+      WHEN UPPER(TRIM(shipped_date)) = 'NULL' THEN NULL
+      WHEN TRIM(shipped_date) = '' THEN NULL
+      ELSE CAST(shipped_date AS TIMESTAMP)
+    END AS shipped_date, 
+
     -- Deduplication
     ROW_NUMBER() OVER (PARTITION BY order_id ORDER BY order_date DESC) AS row_num
     
