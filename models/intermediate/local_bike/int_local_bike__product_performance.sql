@@ -51,18 +51,18 @@ SELECT
   -- Sales velocity (units sold per day since first sale)
   SAFE_DIVIDE(
     SUM(sd.quantity),
-    DATE_DIFF(MAX(sd.order_date), MIN(sd.order_date), DAY) + 1
+    DATE_DIFF(MAX(DATE(sd.order_date)), MIN(DATE(sd.order_date)), DAY) + 1
   ) AS avg_daily_units_sold,
   
   -- Date ranges
-  MIN(sd.order_date) AS first_sale_date,
-  MAX(sd.order_date) AS last_sale_date,
-  DATE_DIFF(CURRENT_DATE(), MAX(sd.order_date), DAY) AS days_since_last_sale,
+  MIN(DATE(sd.order_date)) AS first_sale_date,
+  MAX(DATE(sd.order_date)) AS last_sale_date,
+  DATE_DIFF(CURRENT_DATE(), MAX(DATE(sd.order_date)), DAY) AS days_since_last_sale,
   
   -- Product lifecycle
   CASE 
-    WHEN DATE_DIFF(CURRENT_DATE(), MAX(sd.order_date), DAY) > 180 THEN 'Inactive'
-    WHEN DATE_DIFF(CURRENT_DATE(), MAX(sd.order_date), DAY) > 90 THEN 'Slow Moving'
+    WHEN DATE_DIFF(CURRENT_DATE(), MAX(DATE(sd.order_date)), DAY) > 180 THEN 'Inactive'
+    WHEN DATE_DIFF(CURRENT_DATE(), MAX(DATE(sd.order_date)), DAY) > 90 THEN 'Slow Moving'
     WHEN SUM(sd.quantity) > 50 THEN 'Best Seller'
     WHEN SUM(sd.quantity) > 20 THEN 'Popular'
     ELSE 'Regular'

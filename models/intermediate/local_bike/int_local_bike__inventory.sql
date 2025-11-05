@@ -58,6 +58,6 @@ SELECT
     ELSE FALSE
   END AS is_low_stock
 
-FROM stocks AS s
+FROM stocks AS stk
 LEFT JOIN products AS p ON stk.product_id = p.product_id
-LEFT JOIN stores AS st ON stk.store_id = str.store_id
+LEFT JOIN stores AS str ON stk.store_id = str.store_id
