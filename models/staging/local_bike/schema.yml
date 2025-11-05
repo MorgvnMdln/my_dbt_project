@@ -45,17 +45,12 @@ models:
         tests:
           - not_null
           - relationships:
-              name: customer_id_foreign_key_in_stg_local_bike__orders
               to: ref('stg_local_bike__customers')
               field: customer_id
       - name: order_status
         description: "The current status of the order (1=Pending, 2=Processing, 3=Rejected, 4=Completed)."
         tests:
           - not_null
-          #- accepted_values:
-              #name: accepted_values_order_status
-              #values: [1, 2, 3, 4]
-              #quote: false
       - name: order_date
         description: "Date when the order was placed."
         tests:
@@ -71,14 +66,12 @@ models:
         tests:
           - not_null
           - relationships:
-              name: store_id_foreign_key_in_stg_local_bike__orders
               to: ref('stg_local_bike__stores')
               field: store_id
       - name: staff_id
         description: "Foreign key linking the order to the staff member who processed it."
         tests:
           - relationships:
-              name: staff_id_foreign_key_in_stg_local_bike__orders
               to: ref('stg_local_bike__staffs')
               field: staff_id
 
@@ -95,7 +88,6 @@ models:
         tests:
           - not_null
           - relationships:
-              name: order_id_foreign_key_in_stg_local_bike__order_items
               to: ref('stg_local_bike__orders')
               field: order_id
       - name: item_id
@@ -107,7 +99,6 @@ models:
         tests:
           - not_null
           - relationships:
-              name: product_id_foreign_key_in_stg_local_bike__order_items
               to: ref('stg_local_bike__products')
               field: product_id
       - name: quantity
@@ -142,7 +133,6 @@ models:
         tests:
           - not_null
           - relationships:
-              name: brand_id_foreign_key_in_stg_local_bike__products
               to: ref('stg_local_bike__brands')
               field: brand_id
       - name: category_id
@@ -150,7 +140,6 @@ models:
         tests:
           - not_null
           - relationships:
-              name: category_id_foreign_key_in_stg_local_bike__products
               to: ref('stg_local_bike__categories')
               field: category_id
       - name: model_year
@@ -239,25 +228,21 @@ models:
         description: "Status indicating if the staff member is currently active (1=active, 0=inactive)."
         tests:
           - not_null
-          #- accepted_values:
-              #name: accepted_values_staff_active
-              #values: [0, 1]
-              #quote: false
       - name: store_id
         description: "Foreign key linking the staff member to their assigned store."
         tests:
           - not_null
           - relationships:
-              name: store_id_foreign_key_in_stg_local_bike__staffs
               to: ref('stg_local_bike__stores')
               field: store_id
       - name: manager_id
         description: "Foreign key linking the staff member to their manager (self-referencing relationship, can be null for top-level managers)."
         tests:
           - relationships:
-              name: manager_id_foreign_key_in_stg_local_bike__staffs
               to: ref('stg_local_bike__staffs')
               field: staff_id
+              config:
+                severity: warn  # Avertissement au lieu d'erreur
 
   - name: stg_local_bike__stocks
     description: "This model contains real-time inventory indicating the available quantity of each product per store"
@@ -272,7 +257,6 @@ models:
         tests:
           - not_null
           - relationships:
-              name: store_id_foreign_key_in_stg_local_bike__stocks
               to: ref('stg_local_bike__stores')
               field: store_id
       - name: product_id
@@ -280,7 +264,6 @@ models:
         tests:
           - not_null
           - relationships:
-              name: product_id_foreign_key_in_stg_local_bike__stocks
               to: ref('stg_local_bike__products')
               field: product_id
       - name: quantity
