@@ -43,25 +43,25 @@ models:
   my_first_dbt_project:
 
     staging:
-      materialized: view
+      +materialized: view
       google_analytics:
-        schema: stg_google_analytics
+        +schema: stg_google_analytics
       sales_database:
-        schema: stg_sales_database
+        +schema: stg_sales_database
       google_sheets:
-        schema: stg_google_sheets
+        +schema: stg_google_sheets
       local_bike:
-        schema: stg_local_bike
+        +schema: stg_local_bike
 
     intermediate:
-      materialized: view
+      +materialized: view
       sales_database: 
-        schema: int_sales_database
+        +schema: int_sales_database
       google_analytics:
-        schema: int_google_analytics
+        +schema: int_google_analytics
       local_bike:
-        schema: stg_local_bike
+        +schema: stg_local_bike
     mart:
-      schema: mart
-      materialized: table
+      +schema: mart
+      +materialized: table
 
