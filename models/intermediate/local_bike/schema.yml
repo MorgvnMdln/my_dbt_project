@@ -1,0 +1,336 @@
+version: 2
+
+models:
+  - name: int_local_bike__orders
+    description: "Orders enriched with customer, store, and staff information, including delivery metrics and order status labels"
+    columns:
+      - name: order_id
+        description: "Primary key, unique identifier for each order"
+        tests:
+          - unique
+          - not_null
+      - name: order_date
+        description: "Date when the order was placed"
+        tests:
+          - not_null
+      - name: order_status
+        description: "Numeric status of the order (1=Pending, 2=Processing, 3=Rejected, 4=Completed)"
+      - name: order_status_label
+        description: "Human-readable order status"
+      - name: days_until_required
+        description: "Number of days between order date and required date"
+      - name: days_to_ship
+        description: "Number of days between order date and shipped date"
+      - name: shipped_on_time
+        description: "Boolean indicating if the order was shipped before or on the required date"
+      - name: customer_id
+        description: "Foreign key to customer"
+      - name: customer_full_name
+        description: "Customer's full name (first + last)"
+      - name: store_id
+        description: "Foreign key to store"
+      - name: store_name
+        description: "Name of the store"
+      - name: staff_id
+        description: "Foreign key to staff member who processed the order"
+      - name: staff_full_name
+        description: "Staff member's full name"
+
+  - name: int_local_bike__products
+    description: "Products enriched with brand and category information, including price segments and product age classification"
+    columns:
+      - name: product_id
+        description: "Primary key, unique identifier for each product"
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Name of the product"
+      - name: brand_name
+        description: "Brand name from the brands table"
+      - name: category_name
+        description: "Category name from the categories table"
+      - name: product_classification
+        description: "Combined brand and category for easy filtering"
+      - name: price_segment
+        description: "Price classification: Budget (<$500), Mid-Range ($500-$1500), Premium ($1500-$3000), Luxury (>$3000)"
+      - name: product_age_years
+        description: "Number of years since the model year"
+      - name: model_age_category
+        description: "Classification of model age: Current Year, Last Year, Older Model, Future Model"
+
+  - name: int_local_bike__order_items
+    description: "Order items enriched with complete product information and calculated pricing metrics"
+    columns:
+      - name: order_item_id
+        description: "Primary key for order items"
+        tests:
+          - unique
+          - not_null
+      - name: order_id
+        description: "Foreign key to orders"
+        tests:
+          - not_null
+      - name: product_id
+        description: "Foreign key to products"
+      - name: product_name
+        description: "Name of the product"
+      - name: brand_name
+        description: "Brand of the product"
+      - name: category_name
+        description: "Category of the product"
+      - name: quantity
+        description: "Quantity ordered"
+      - name: list_price
+        description: "Catalog price at time of order"
+      - name: discount
+        description: "Discount rate applied (0.0 to 1.0)"
+      - name: total_item_amount
+        description: "Net amount after discount"
+      - name: gross_amount
+        description: "Amount before discount (list_price * quantity)"
+      - name: discount_amount
+        description: "Total discount applied in currency"
+      - name: discount_percentage
+        description: "Discount as a percentage"
+      - name: net_unit_price
+        description: "Price per unit after discount"
+      - name: discount_category
+        description: "Classification of discount level"
+
+  - name: int_local_bike__sales_details
+    description: "Complete sales transaction view combining orders and order items with all contextual information. Primary model for sales analysis."
+    columns:
+      - name: order_id
+        description: "Order identifier"
+      - name: order_date
+        description: "When the order was placed"
+      - name: order_year
+        description: "Year extracted from order date"
+      - name: order_month
+        description: "Month number extracted from order date"
+      - name: order_quarter
+        description: "Quarter extracted from order date"
+      - name: order_year_month
+        description: "Year-month in YYYY-MM format"
+      - name: customer_id
+        description: "Customer identifier"
+      - name: customer_full_name
+        description: "Customer's complete name"
+      - name: store_id
+        description: "Store identifier"
+      - name: store_name
+        description: "Store name"
+      - name: staff_id
+        description: "Staff member identifier"
+      - name: product_id
+        description: "Product identifier"
+      - name: product_name
+        description: "Product name"
+      - name: brand_name
+        description: "Brand name"
+      - name: category_name
+        description: "Category name"
+      - name: quantity
+        description: "Quantity sold"
+      - name: gross_amount
+        description: "Revenue before discount"
+      - name: discount_amount
+        description: "Total discount given"
+      - name: net_amount
+        description: "Net revenue after discount"
+
+  - name: int_local_bike__inventory
+    description: "Inventory data enriched with product and store information, including stock levels and inventory value calculations"
+    columns:
+      - name: stock_id
+        description: "Primary key for stock records"
+        tests:
+          - unique
+          - not_null
+      - name: store_id
+        description: "Store identifier"
+      - name: product_id
+        description: "Product identifier"
+      - name: store_name
+        description: "Name of the store"
+      - name: product_name
+        description: "Name of the product"
+      - name: brand_name
+        description: "Brand of the product"
+      - name: category_name
+        description: "Category of the product"
+      - name: stock_quantity
+        description: "Available quantity in stock"
+      - name: inventory_value
+        description: "Total value of stock (quantity * list_price)"
+      - name: stock_level
+        description: "Classification: Out of Stock, Low Stock, Adequate Stock, High Stock"
+      - name: is_out_of_stock
+        description: "Boolean flag for products with zero stock"
+      - name: is_low_stock
+        description: "Boolean flag for products with 1-5 units in stock"
+
+  - name: int_local_bike__customer_metrics
+    description: "Aggregated customer metrics for RFM analysis and customer segmentation. Key model for customer analysis and retention strategies."
+    columns:
+      - name: customer_id
+        description: "Primary key, unique customer identifier"
+        tests:
+          - unique
+          - not_null
+      - name: customer_full_name
+        description: "Customer's full name"
+      - name: total_orders
+        description: "Total number of orders placed by the customer"
+      - name: total_items_purchased
+        description: "Total number of distinct items purchased"
+      - name: total_quantity_purchased
+        description: "Total units purchased across all orders"
+      - name: total_gross_revenue
+        description: "Total revenue before discounts"
+      - name: total_discount_given
+        description: "Total discounts received"
+      - name: total_net_revenue
+        description: "Total net revenue generated by customer"
+      - name: avg_order_value
+        description: "Average value per order"
+      - name: avg_discount_rate
+        description: "Average discount rate received"
+      - name: first_order_date
+        description: "Date of first purchase"
+      - name: last_order_date
+        description: "Date of most recent purchase"
+      - name: customer_lifetime_days
+        description: "Days between first and last order"
+      - name: days_since_last_order
+        description: "Recency: days since last purchase"
+      - name: customer_segment
+        description: "Segmentation: One-Time Buyer, Occasional Buyer, Regular Buyer, VIP Customer"
+      - name: favorite_category
+        description: "Most frequently purchased product category"
+
+  - name: int_local_bike__product_performance
+    description: "Aggregated product sales and inventory metrics for product performance analysis and inventory optimization"
+    columns:
+      - name: product_id
+        description: "Primary key, unique product identifier"
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Name of the product"
+      - name: brand_name
+        description: "Brand name"
+      - name: category_name
+        description: "Category name"
+      - name: total_orders
+        description: "Number of orders containing this product"
+      - name: total_units_sold
+        description: "Total units sold"
+      - name: total_gross_revenue
+        description: "Total revenue before discounts"
+      - name: total_net_revenue
+        description: "Total net revenue"
+      - name: avg_discount_percentage
+        description: "Average discount percentage applied"
+      - name: total_stock_across_stores
+        description: "Total inventory across all stores"
+      - name: total_inventory_value
+        description: "Total value of current inventory"
+      - name: stock_turnover_ratio
+        description: "Ratio of units sold to current stock"
+      - name: avg_daily_units_sold
+        description: "Average daily sales velocity"
+      - name: days_since_last_sale
+        description: "Days since last sale"
+      - name: product_lifecycle_stage
+        description: "Stage: Inactive, Slow Moving, Regular, Popular, Best Seller"
+
+  - name: int_local_bike__store_performance
+    description: "Aggregated store performance metrics for comparing store efficiency and identifying optimization opportunities"
+    columns:
+      - name: store_id
+        description: "Primary key, unique store identifier"
+        tests:
+          - unique
+          - not_null
+      - name: store_name
+        description: "Name of the store"
+      - name: store_city
+        description: "City where store is located"
+      - name: store_state
+        description: "State where store is located"
+      - name: total_orders
+        description: "Total orders processed"
+      - name: unique_customers
+        description: "Number of unique customers served"
+      - name: total_items_sold
+        description: "Total items sold"
+      - name: total_gross_revenue
+        description: "Total revenue before discounts"
+      - name: total_net_revenue
+        description: "Total net revenue"
+      - name: avg_order_value
+        description: "Average order value"
+      - name: avg_discount_rate
+        description: "Average discount rate given"
+      - name: avg_orders_per_customer
+        description: "Customer loyalty metric"
+      - name: total_inventory_units
+        description: "Total units in inventory"
+      - name: total_inventory_value
+        description: "Total value of inventory"
+      - name: avg_days_to_ship
+        description: "Average shipping time"
+      - name: on_time_shipping_rate
+        description: "Percentage of orders shipped on time"
+      - name: avg_daily_revenue
+        description: "Average daily revenue"
+      - name: avg_daily_orders
+        description: "Average daily order volume"
+
+  - name: int_local_bike__staff_performance
+    description: "Aggregated staff performance metrics for evaluating employee productivity and identifying training needs"
+    columns:
+      - name: staff_id
+        description: "Primary key, unique staff identifier"
+        tests:
+          - unique
+          - not_null
+      - name: staff_full_name
+        description: "Staff member's full name"
+      - name: staff_manager_id
+        description: "Manager's staff ID"
+      - name: store_name
+        description: "Store where staff works"
+      - name: total_orders_processed
+        description: "Total orders handled"
+      - name: unique_customers_served
+        description: "Number of unique customers served"
+      - name: total_units_sold
+        description: "Total units sold"
+      - name: total_net_revenue
+        description: "Total net revenue generated"
+      - name: avg_order_value
+        description: "Average order value"
+      - name: avg_discount_rate
+        description: "Average discount rate applied"
+      - name: avg_days_to_ship
+        description: "Average shipping time"
+      - name: on_time_shipping_rate
+        description: "Percentage of on-time shipments"
+      - name: order_completion_rate
+        description: "Percentage of successfully completed orders"
+      - name: pending_orders
+        description: "Number of pending orders"
+      - name: completed_orders
+        description: "Number of completed orders"
+      - name: rejected_orders
+        description: "Number of rejected orders"
+      - name: avg_daily_orders
+        description: "Average daily order processing rate"
+      - name: avg_daily_revenue
+        description: "Average daily revenue generated"
+      - name: performance_tier
+        description: "Classification: Top Performer, High Performer, Average Performer, New/Low Activity"

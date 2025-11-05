@@ -60,7 +60,7 @@ models:
       google_analytics:
         +schema: int_google_analytics
       local_bike:
-        +schema: stg_local_bike
+        +schema: int_local_bike
     mart:
       +schema: mart
       +materialized: table
