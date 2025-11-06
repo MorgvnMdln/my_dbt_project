@@ -171,7 +171,7 @@ models:
       - name: is_low_stock
         description: "Boolean flag for products with 1-5 units in stock"
 
-  - name: int_local_bike__customer_metrics
+  - name: int_local_bike__customers
     description: "Aggregated customer metrics for RFM analysis and customer segmentation. Key model for customer analysis and retention strategies."
     columns:
       - name: customer_id

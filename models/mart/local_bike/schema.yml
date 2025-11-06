@@ -1,0 +1,279 @@
+version: 2
+
+models:
+  - name: mrt_local_bike__sales
+    description: "Complete sales transactions table, partitioned by date and clustered for optimal query performance. This is the primary table for sales analysis and dashboards."
+    config:
+      tags: ['mart', 'sales', 'daily']
+    columns:
+      - name: order_id
+        description: "Unique order identifier"
+        tests:
+          - not_null
+      - name: order_item_id
+        description: "Unique order item identifier"
+        tests:
+          - unique
+          - not_null
+      - name: order_date
+        description: "Date when order was placed (used for partitioning)"
+        tests:
+          - not_null
+      - name: customer_id
+        description: "Customer identifier"
+      - name: product_id
+        description: "Product identifier"
+      - name: store_id
+        description: "Store identifier"
+      - name: net_amount
+        description: "Net revenue after discounts"
+        tests:
+          - not_null
+      - name: estimated_profit
+        description: "Estimated profit at 40% margin"
+      - name: dbt_updated_at
+        description: "Timestamp of last dbt update"
+
+  - name: mrt_local_bike__customers
+    description: "Customer analytics table with RFM segmentation, lifetime value, and churn risk indicators. Use for customer analysis and targeted marketing."
+    config:
+      tags: ['mart', 'customers', 'rfm']
+    columns:
+      - name: customer_id
+        description: "Primary key, unique customer identifier"
+        tests:
+          - unique
+          - not_null
+      - name: customer_full_name
+        description: "Customer's full name"
+      - name: total_net_revenue
+        description: "Total lifetime revenue from customer"
+        tests:
+          - not_null
+      - name: total_orders
+        description: "Total number of completed orders"
+      - name: recency_score
+        description: "RFM recency score (1-5, higher is better)"
+      - name: frequency_score
+        description: "RFM frequency score (1-5, higher is better)"
+      - name: monetary_score
+        description: "RFM monetary score (1-5, higher is better)"
+      - name: total_rfm_score
+        description: "Combined RFM score (3-15)"
+      - name: rfm_segment
+        description: "RFM segment: Champions, Loyal Customers, At Risk, etc."
+      - name: customer_segment
+        description: "Simple segment: One-Time, Occasional, Regular, VIP"
+      - name: customer_value_tier
+        description: "Value classification: High/Medium/Low Value"
+      - name: is_at_churn_risk
+        description: "Flag for customers inactive >180 days"
+      - name: is_active
+        description: "Flag for customers active in last 90 days"
+      - name: days_since_last_order
+        description: "Recency metric - days since last purchase"
+
+  - name: mrt_local_bike__products
+    description: "Product performance with ABC analysis, inventory metrics, and lifecycle classification. Use for inventory optimization and product strategy."
+    config:
+      tags: ['mart', 'products', 'inventory']
+    columns:
+      - name: product_id
+        description: "Primary key, unique product identifier"
+        tests:
+          - unique
+          - not_null
+      - name: product_name
+        description: "Product name"
+      - name: brand_name
+        description: "Brand name"
+      - name: category_name
+        description: "Category name"
+      - name: total_net_revenue
+        description: "Total net revenue from product"
+      - name: total_units_sold
+        description: "Total units sold"
+      - name: abc_class
+        description: "ABC classification: A (top 70% revenue), B (next 20%), C (bottom 10%)"
+      - name: revenue_rank
+        description: "Product ranking by revenue (1 = highest)"
+      - name: revenue_contribution_pct
+        description: "Percentage of total company revenue"
+      - name: stock_turnover_ratio
+        description: "Units sold / current stock"
+      - name: product_lifecycle_stage
+        description: "Lifecycle: Inactive, Slow Moving, Regular, Popular, Best Seller"
+      - name: is_bestseller
+        description: "Flag for products with >50 units sold and high velocity"
+      - name: is_slow_moving
+        description: "Flag for products with no sales in 180+ days"
+      - name: needs_restock
+        description: "Flag for A-class products with low turnover"
+      - name: potential_overstock
+        description: "Flag for B/C products with high inventory"
+
+  - name: mrt_local_bike__stores
+    description: "Store performance comparison with rankings, operational KPIs, and health indicators. Use for benchmarking and resource allocation."
+    config:
+      tags: ['mart', 'stores', 'operations']
+    columns:
+      - name: store_id
+        description: "Primary key, unique store identifier"
+        tests:
+          - unique
+          - not_null
+      - name: store_name
+        description: "Store name"
+      - name: total_net_revenue
+        description: "Total net revenue for store"
+      - name: revenue_rank
+        description: "Store ranking by revenue"
+      - name: performance_tier
+        description: "Performance classification: Top Performer, Above Average, Average, Below Average"
+      - name: shipping_health
+        description: "Shipping quality: Excellent, Good, Needs Improvement, Critical"
+      - name: retention_indicator
+        description: "Customer retention: High/Medium/Low"
+      - name: inventory_health
+        description: "Inventory level: High/Adequate/Low"
+      - name: on_time_shipping_rate
+        description: "Percentage of orders shipped on time"
+      - name: avg_orders_per_customer
+        description: "Customer loyalty indicator"
+      - name: below_avg_revenue
+        description: "Flag for stores below average revenue"
+      - name: shipping_issues
+        description: "Flag for stores with <85% on-time shipping"
+      - name: retention_issues
+        description: "Flag for stores with <1.5 orders per customer"
+
+  - name: mrt_local_bike__staffs
+    description: "Staff performance evaluation with comprehensive scoring, rankings, and development recommendations. Use for performance reviews and incentive programs."
+    config:
+      tags: ['mart', 'staff', 'hr']
+    columns:
+      - name: staff_id
+        description: "Primary key, unique staff identifier"
+        tests:
+          - unique
+          - not_null
+      - name: staff_full_name
+        description: "Staff member's full name"
+      - name: store_name
+        description: "Store where staff works"
+      - name: total_net_revenue
+        description: "Total revenue generated"
+      - name: total_orders_processed
+        description: "Number of orders handled"
+      - name: order_completion_rate
+        description: "Percentage of completed orders"
+      - name: on_time_shipping_rate
+        description: "Percentage of on-time shipments"
+      - name: performance_score
+        description: "Comprehensive score (0-100) based on multiple factors"
+      - name: star_rating
+        description: "Performance rating (1-5 stars)"
+      - name: performance_tier
+        description: "Tier: Top Performer, High Performer, Average, New/Low Activity"
+      - name: revenue_rank
+        description: "Ranking by revenue generation"
+      - name: productivity_rank
+        description: "Ranking by order processing volume"
+      - name: quality_rank
+        description: "Ranking by quality metrics"
+      - name: is_top_revenue_generator
+        description: "Flag for top 20% by revenue"
+      - name: is_highly_productive
+        description: "Flag for top 20% by productivity"
+      - name: is_high_quality
+        description: "Flag for top 20% by quality"
+      - name: needs_completion_improvement
+        description: "Flag if completion rate <95%"
+      - name: needs_shipping_improvement
+        description: "Flag if on-time rate <90%"
+      - name: incentive_eligible_amount
+        description: "Example commission at 2% of revenue"
+      - name: profit_contribution
+        description: "Estimated profit generated (40% margin)"
+
+  - name: mrt_local_bike__inventory
+    description: "Inventory management with reorder recommendations, alerts, and action priorities. Use for stock optimization and purchasing decisions."
+    config:
+      tags: ['mart', 'inventory', 'operations']
+    columns:
+      - name: stock_id
+        description: "Primary key for stock record"
+        tests:
+          - unique
+          - not_null
+      - name: store_name
+        description: "Store location"
+      - name: product_name
+        description: "Product name"
+      - name: stock_quantity
+        description: "Current inventory level"
+      - name: inventory_value
+        description: "Total value of stock"
+      - name: abc_class
+        description: "Product ABC classification"
+      - name: days_of_stock_remaining
+        description: "Days until out of stock based on sales velocity"
+      - name: recommended_reorder_quantity
+        description: "Suggested reorder quantity for 30-day supply"
+      - name: recommended_reorder_value
+        description: "Value of recommended reorder"
+      - name: alert_priority
+        description: "Alert level: CRITICAL, HIGH, MEDIUM, LOW"
+      - name: stock_health
+        description: "Health status: Out of Stock, Critical Low, Low Stock, Healthy, Overstock, Excess/Slow Moving"
+      - name: recommended_action
+        description: "Specific action recommendation"
+      - name: lost_sales_opportunity
+        description: "Flag for out-of-stock high-demand products"
+      - name: markdown_candidate
+        description: "Flag for products with old, excess stock"
+      - name: urgent_reorder_needed
+        description: "Flag for A-class products with <7 days stock"
+      - name: estimated_weekly_lost_sales
+        description: "Estimated sales lost due to stockout"
+
+  - name: mrt_local_bike__daily_kpis
+    description: "Daily KPIs with moving averages and year-over-year comparisons. Incremental model for time-series analysis and trend monitoring."
+    config:
+      tags: ['mart', 'kpis', 'daily', 'incremental']
+    columns:
+      - name: date_day
+        description: "Primary key, date of metrics"
+        tests:
+          - unique
+          - not_null
+      - name: total_orders
+        description: "Orders placed on this day"
+      - name: total_net_revenue
+        description: "Net revenue for the day"
+      - name: unique_customers
+        description: "Number of unique customers"
+      - name: avg_order_value
+        description: "Average order value"
+      - name: orders_per_customer
+        description: "Orders per customer ratio"
+      - name: discount_rate
+        description: "Overall discount rate"
+      - name: revenue_wow_change
+        description: "Week-over-week revenue change ($)"
+      - name: revenue_wow_pct_change
+        description: "Week-over-week revenue change (%)"
+      - name: orders_7day_ma
+        description: "7-day moving average of orders"
+      - name: revenue_7day_ma
+        description: "7-day moving average of revenue"
+      - name: revenue_30day_ma
+        description: "30-day moving average of revenue"
+      - name: ytd_revenue
+        description: "Year-to-date cumulative revenue"
+      - name: mtd_revenue
+        description: "Month-to-date cumulative revenue"
+      - name: is_above_30day_avg
+        description: "Flag if revenue above 30-day average"
+      - name: is_weekend
+        description: "Flag for weekend days"
