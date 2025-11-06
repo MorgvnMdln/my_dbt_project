@@ -13,7 +13,6 @@ models:
         description: "Foreign key linking the feedback to the corresponding order."
         tests:
           - relationships:
-              name: order_id_foreign_key_in_stg_sales_database__feedback
               to: ref('stg_sales_database__order')
               field: order_id
 
@@ -36,7 +35,6 @@ models:
         description: "Foreign key linking the order to the user who placed it."
         tests:
           - relationships:
-              name: user_id_id_foreign_key_in_stg_sales_database__order
               to: ref('stg_sales_database__user')
               field: user_id
 
@@ -52,7 +50,6 @@ models:
         description: "Foreign key linking the order item to the corresponding order."
         tests:
           - relationships:
-              name: order_id_id_foreign_key_in_stg_sales_database__order_item
               to: ref('stg_sales_database__order')
               field: order_id
       - name: total_order_item_amount
@@ -70,7 +67,6 @@ models:
         description: "Foreign key linking the payment to the corresponding order."
         tests:
           - relationships:
-              name: order_id_id_foreign_key_in_stg_sales_database__payment
               to: ref('stg_sales_database__order')
               field: order_id
 
